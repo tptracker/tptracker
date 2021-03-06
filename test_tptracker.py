@@ -4,7 +4,7 @@ import tptracker
 
 def test_data_extractor_v1() -> None:
     """ Checks the function for normal data"""
-    file = open("test_data.csv", 'r')
+    file = "test_data.csv"
     actual = tptracker.data_extractor(file)
     expected = {'Location': 'Current Status',
                 'Room1': True,
