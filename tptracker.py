@@ -1,5 +1,5 @@
 # This is the code for connecting excel to python
-from typing import Dict, List
+from typing import Dict, List, Union
 from time import sleep
 # Code for sending emails
 import smtplib,ssl
@@ -34,7 +34,7 @@ CHECK_INTERVAL = 10
 #    staff.
 #
 
-def data_extractor(file) -> Dict[str, bool]:
+def data_extractor(file) -> Dict[str, Union[str, bool]]:
     """ Reads the data from the <file> and -+returns a dict with keys as the
     location and value as the current status of the toilet paper.
 
