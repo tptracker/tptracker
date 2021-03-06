@@ -103,13 +103,13 @@ def send_email():
     email['To'] = Address("", "mahithedula", "gmail.com") #change to cleanit@andrew.cmu.edu
 
     #Creating the Body of the Email
-    message = " Greetings, There is a deficiency in toilet paper at " + location + ". Hopefully you can fix it. Thanks, TP Tracker"
+    message = " Greetings, There is a defiency in toilet paper at " + location + ". Hopefully you can replace it. Thanks, TP Tracker"
     email.set_content(message)
 
     #Sending email message
     secure = ssl.create_default_context()
     try:   
-        with smtplib.SMTP("smtp.gmail.com", 465, secure) as server:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=secure) as server:
             server.login("tpdeficiencyalert@gmail.com", "NewbieHacks") #username and password
             server.send_message(email)
         print("Successfully sent")
