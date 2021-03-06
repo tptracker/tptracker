@@ -80,16 +80,16 @@ def data_updater() -> None:
         sleep(CHECK_INTERVAL * 60)
 
 
-def data_scanner(info: Dict[str, bool]):  # return type to be assigned
-    """ Scans through the <info> and detects if a False value exists triggers
-    the email function"""
-    # scans through the value pairs
-    for condition in info.values():
-        # if it detects a <False> returns <false>
-        if not condition:
-            return False
-    # else True i.e. no tp is empty
-    return True
+# def data_scanner(info: Dict[str, bool]):  # return type to be assigned
+#     """ Scans through the <info> and detects if a False value exists triggers
+#     the email function"""
+#     # scans through the value pairs
+#     for condition in info.values():
+#         # if it detects a <False> returns <false>
+#         if not condition:
+#             return False
+#     # else True i.e. no tp is empty
+#     return True
 
 
 
