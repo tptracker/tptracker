@@ -54,12 +54,20 @@ void loop() {
   
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
   if (buttonState != currMode) {
-    // Display Data to Cerial Monitor
-    Serial.println(buttonState);
-
     //set the current equal to the data
     currMode = buttonState;
     digitalWrite(ledPin, buttonState);
+    
+    // Display Data to Cerial Monitor
+    Serial.println(buttonState);
+    Serial.print(",");
+    if (buttonState == HIGH) {
+      Serial.println("True");
+    }
+    else {
+      Serial.println("False");
+    }
+    
   }
   delay(500);
 }
