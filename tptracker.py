@@ -1,4 +1,6 @@
 # This is the code for connecting excel to python
+from typing import Dict, List, Union
+from time import sleep
 # Code for sending emails
 import smtplib
 import ssl
@@ -106,30 +108,35 @@ def data_updater() -> None:
         sleep(CHECK_INTERVAL * 60)
 
 
+
 def send_email(location: str) -> None:
     """ Sends an email to the manager informing him about the location of the
     toilet where toilet roll has exhausted """
-
     email = EmailMessage()
-    email['Subject'] = "Defiency in Toilet Paper at " + location
+    email['Subject'] = "Toilet Paper Replacement at " + location
 
-    # Using Address Class to set misaddresses
-    email['From'] = Address("TP Tracker", "tpdeficiencyalert",
-                            "gmail.com")  # tpdeficiencyalert@gmail.com
-    email['To'] = Address("", "mahithedula",
-                          "gmail.com")  # change to cleanit@andrew.cmu.edu
+    #Using Address Class to set emailaddresses
+    email['From'] = Address("TP Tracker", "tpdeficiencyalert", "gmail.com" ) #tpdeficiencyalert@gmail.com
+    email['To'] = Address("", "mahithedula", "gmail.com") #change to cleanit@andrew.cmu.edu
 
-    # Creating the Body of the Email
-    message = " Greetings, There is a deficiency in toilet paper at " + \
-              location + ". Hopefully you can fix it. Thanks, TP Tracker"
+    #Creating the Body of the Email
+    message = f""" 
+    Greetings,  
+    
+    As of {date}, the toilet paper in {location} ran out.
+    Hopefully you can replace it. 
+    
+    Thanks, 
+    TP Tracker
+    
+    """
     email.set_content(message)
 
-    # Sending email message
+    #Sending email message
     secure = ssl.create_default_context()
-    try:
-        with smtplib.SMTP("smtp.gmail.com", 465, secure) as server:
-            server.login("tpdeficiencyalert@gmail.com",
-                         "NewbieHacks")  # username and password
+    try:   
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=secure) as server:
+            server.login("tpdeficiencyalert@gmail.com", "NewbieHacks") #username and password
             server.send_message(email)
         print("Successfully sent")
     except Exception as error:

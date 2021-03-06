@@ -43,11 +43,6 @@ void setup() {
 }
 
 void loop() {
-  //print out column headers
-  while(label) { //runs once
-    Serial.println(bathroomLabel);
-    label = false;
-  }
   
   // read the state of the pushbutton value:
   buttonState = digitalRead(buttonPin);
