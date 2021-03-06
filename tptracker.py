@@ -3,6 +3,7 @@ from typing import Dict, List, Union
 from time import sleep
 # Code for sending emails
 import smtplib,ssl
+from datetime import datetime
 from email.message import EmailMessage
 from email.headerregistry import Address
 # This is the code for connecting to the serial port of Arduino.
@@ -34,6 +35,7 @@ CHECK_INTERVAL = 10
 #    staff.
 #
 
+
 def data_extractor(file) -> Dict[str, Union[str, bool]]:
     """ Reads the data from the <file> and -+returns a dict with keys as the
     location and value as the current status of the toilet paper.
@@ -42,9 +44,27 @@ def data_extractor(file) -> Dict[str, Union[str, bool]]:
     True:
         Toilet paper is present
     False:
-        Toilet paper is empty and needs a refill"""
-    # TODO: Implement this function
-    
+        Toilet paper is empty and needs a refill
+
+    Precondition: Every room has a different name"""
+    formatted_dict = {}
+
+    opened = open(file, 'r')
+    # reading the column headers
+    line = opened.readline()
+    # for every line in file
+    while line:
+        # convert csv to list
+        lined_list = line.split(',')
+        # make the formatted_dict
+        formatted_dict[lined_list[0]] = lined_list[1]
+        # read the next line
+        line = opened.readline()
+
+    return formatted_dict
+
+def create_data_file() -> None:
+    """ Creates the data file"""   
     # This sets up the serial connection and creates the file.
     ser = serial.Serial(arduino_port, baud)
     print("Connected to Arduino port:" + arduino_port)
@@ -70,16 +90,20 @@ def data_updater() -> None:
     # while every toilet paper is full
     while full:
         file = open('test_data.csv', 'r')
-        data = data_extractor(file)
+        data = data_extractor(fileName)
         # Checking if there is a toilet roll which is empty
         for room, status in data.items():
             if not status:
-                send_email(room)
+                # datetime object containing current date and time
+                now = datetime.now()
+                # convert into str
+                dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+                send_email(room, dt_string)
         # Recheck for data after 10 minutes
         sleep(CHECK_INTERVAL * 60)
 
 
-def send_email(location, date):
+def send_email(location: str, date: str) -> None:
     email = EmailMessage()
     email['Subject'] = "Toilet Paper Replacement at " + location
 
@@ -115,5 +139,7 @@ def send_email(location, date):
 
 if __name__ == '__main__':
     input('Press enter to start the searching')
+    # creates the data file
+    create_data_file()
     data_updater()
     # TODO: type 'exit' to stop the program
