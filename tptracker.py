@@ -80,7 +80,14 @@ def data_updater() -> None:
 def data_scanner(info: Dict[str, bool]):  # return type to be assigned
     """ Scans through the <info> and detects if a False value exists triggers
     the email function"""
-    # TODO: Implement this function
+    # scans through the value pairs
+    for condition in info.values():
+        # if it detects a <False> returns <false>
+        if not condition:
+            return False
+    # else True i.e. no tp is empty
+    return True
+
 
 
 def send_email():
