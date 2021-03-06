@@ -2,6 +2,14 @@
 from typing import Dict, List
 from time import sleep
 
+# This is the code for connecting to the serial port of Arduino. adapted from
+# https://www.learnrobotics.org/blog/arduino-data-logger-csv/'s version
+import serial
+
+arduino_port = "COM5"  # serial port of Arduino
+baud = 9600  # arduino uno runs at 9600 baud
+fileName = "Output_CSV_from_Arduino.csv"  # name of the CSV file generated
+
 # the interval after which we have to check the changes in the .csv file
 CHECK_INTERVAL = 10
 
@@ -32,7 +40,24 @@ def data_extractor(file) -> Dict[str, bool]:
         Toilet paper is present
     False:
         Toilet paper is empty and needs a refill"""
-    # TODO: Implement this function
+
+    # This sets up the serial connection and creates the file.
+    ser = serial.Serial(arduino_port, baud)
+    print("Connected to Arduino port:" + arduino_port)
+    file = open(fileName, "w")
+    print("Created file")
+
+    # display the data to the terminal
+    getData = str(ser.readline())
+    data = getData[0:][:-2]
+    print(data)
+
+    # add the data to the file
+    file = open(fileName, "a")  # append the data to the file
+    file.write(data + "\\n")  # write data with a newline
+
+    # close out the file
+    file.close()
 
 
 def data_updater() -> None:
@@ -51,11 +76,16 @@ def data_updater() -> None:
         sleep(CHECK_INTERVAL * 60)
 
 
-def data_scanner(info: Dict[str, bool]):  # return type to be assigned
+def data_scanner(info: Dict[str, bool]) -> bool:  # return type to be assigned
     """ Scans through the <info> and detects if a False value exists triggers
     the email function"""
-    # TODO: Implement this function
-
+    # scans through the value pairs
+    for condition in info.values():
+        # if it detects a <False> returns <false>
+        if not condition:
+            return False
+    # else True i.e. no tp is empty
+    return True
 
 def send_email():
     # TODO: Create this function to send email as <data_scanner> triggers it to
