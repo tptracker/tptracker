@@ -6,15 +6,18 @@ from datetime import datetime
 from email.headerregistry import Address
 from email.message import EmailMessage
 from time import sleep
+
 from typing import Dict
 
 # This is the code for connecting to the serial port of Arduino.
 # adaped from https://www.learnrobotics.org/blog/arduino-data-logger-csv/'s version
 import serial
 
+
 arduino_port = "COM5"  # serial port of Arduino
 baud = 9600  # arduino uno runs at 9600 baud
 fileName = "Output_CSV_from_Arduino.csv"  # name of the CSV file generated
+
 
 # the interval after which we have to check the changes in the .csv file
 CHECK_INTERVAL = 10
@@ -45,6 +48,7 @@ def data_extractor(file) -> Dict[str, bool]:
     True:
         Toilet paper is present
     False:
+
         Toilet paper is empty and needs a refill
 
     Precondition: Every room has a different name"""
@@ -72,18 +76,17 @@ def create_data_file() -> None:
     ser = serial.Serial(arduino_port, baud)
     print("Connected to Arduino port:" + arduino_port)
     file = open(fileName, "w")
-    print("Created file")
-
-    # display the data to the terminal
-    getData = str(ser.readline())
-    data = getData[0:][:-2]
+    print("Created file")    
+    #display the data to the terminal
+    getData=str(ser.readline())
+    data=getData[0:][:-2]
     print(data)
 
-    # add the data to the file
-    file = open(fileName, "a")  # append the data to the file
-    file.write(data + "\\n")  # write data with a newline
+    #add the data to the file
+    file = open(fileName, "a") #append the data to the file
+    file.write(data + "\\n") #write data with a newline
 
-    # close out the file
+    #close out the file
     file.close()
 
 
@@ -101,6 +104,7 @@ def data_updater() -> None:
                 now = datetime.now()
                 # convert into str
                 dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+
                 send_email(room)
         # Recheck for data after 10 minutes
         sleep(CHECK_INTERVAL * 60)
@@ -109,7 +113,7 @@ def data_updater() -> None:
 def send_email(location: str) -> None:
     """ Sends an email to the manager informing him about the location of the 
     toilet where toilet roll has exhausted """
-    
+ 
     email = EmailMessage()
     email['Subject'] = "Defiency in Toilet Paper at " + location
 
@@ -135,6 +139,7 @@ def send_email(location: str) -> None:
     except Exception as error:
         print("Unsuccessful email")
         print(error)
+
 
 
 if __name__ == '__main__':
