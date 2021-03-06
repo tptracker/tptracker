@@ -36,7 +36,7 @@ CHECK_INTERVAL = 10
 #
 
 
-def data_extractor(file) -> Dict[str, Union[str, bool]]:
+def data_extractor(file) -> Dict[str, bool]:
     """ Reads the data from the <file> and -+returns a dict with keys as the
     location and value as the current status of the toilet paper.
 
