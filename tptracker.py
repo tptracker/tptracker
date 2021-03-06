@@ -1,7 +1,10 @@
 # This is the code for connecting excel to python
 from typing import Dict, List
 from time import sleep
-
+# Code for sending emails
+import smtplib,ssl
+from email.message import EmailMessage
+from email.headerregistry import Address
 # This is the code for connecting to the serial port of Arduino.
 # adaped from https://www.learnrobotics.org/blog/arduino-data-logger-csv/'s version
 import serial
@@ -85,8 +88,27 @@ def data_scanner(info: Dict[str, bool]):  # return type to be assigned
 
 def send_email():
     # TODO: Create this function to send email as <data_scanner> triggers it to
-    pass
+    email = EmailMessage()
+    email['Subject'] = "Defiency in Toilet Paper at " + location
 
+    #Using Address Class to set emailaddresses
+    email['From'] = Address("TP Tracker", "tpdeficiencyalert", "gmail.com" ) #tpdeficiencyalert@gmail.com
+    email['To'] = Address("", "mahithedula", "gmail.com") #change to cleanit@andrew.cmu.edu
+
+    #Creating the Body of the Email
+    message = " Greetings, There is a deficiency in toilet paper at " + location + ". Hopefully you can fix it. Thanks, TP Tracker"
+    email.set_content(message)
+
+    #Sending email message
+    secure = ssl.create_default_context()
+    try:   
+        with smtplib.SMTP("smtp.gmail.com", 465, secure) as server:
+            server.login("tpdeficiencyalert@gmail.com", "NewbieHacks") #username and password
+            server.send_message(email)
+        print("Successfully sent")
+    except Exception as error:
+        print("Unsuccessful email")
+        print(error)
 
 if __name__ == '__main__':
     input('Press enter to start the searching')
