@@ -1,7 +1,7 @@
 # This is the code for connecting to the serial port of Arduino.
 # adaped from https://www.learnrobotics.org/blog/arduino-data-logger-csv/'s version
 import serial
-print("hello world");
+
 arduino_port = "COM5" #serial port of Arduino
 baud = 9600 #arduino uno runs at 9600 baud
 fileName="Output_CSV_from_Arduino.csv" #name of the CSV file generated
