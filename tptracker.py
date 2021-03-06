@@ -1,9 +1,15 @@
 # This is the code for connecting excel to python
-from typing import Dict, List
+# Code for sending emails
+import smtplib
+import ssl
+from datetime import datetime
+from email.headerregistry import Address
+from email.message import EmailMessage
 from time import sleep
+from typing import Dict
 
-# This is the code for connecting to the serial port of Arduino. adapted from
-# https://www.learnrobotics.org/blog/arduino-data-logger-csv/'s version
+# This is the code for connecting to the serial port of Arduino.
+# adaped from https://www.learnrobotics.org/blog/arduino-data-logger-csv/'s version
 import serial
 
 arduino_port = "COM5"  # serial port of Arduino
@@ -39,7 +45,28 @@ def data_extractor(file) -> Dict[str, bool]:
     True:
         Toilet paper is present
     False:
-        Toilet paper is empty and needs a refill"""
+        Toilet paper is empty and needs a refill
+
+    Precondition: Every room has a different name"""
+    formatted_dict = {}
+
+    opened = open(file, 'r')
+    # reading the column headers
+    line = opened.readline()
+    # for every line in file
+    while line:
+        # convert csv to list
+        lined_list = line.split(',')
+        # make the formatted_dict
+        formatted_dict[lined_list[0]] = lined_list[1]
+        # read the next line
+        line = opened.readline()
+
+    return formatted_dict
+
+
+def create_data_file() -> None:
+    """ Creates the data file"""
 
     # This sets up the serial connection and creates the file.
     ser = serial.Serial(arduino_port, baud)
@@ -66,33 +93,53 @@ def data_updater() -> None:
     # while every toilet paper is full
     while full:
         file = open('test_data.csv', 'r')
-        data = data_extractor(file)
+        data = data_extractor(fileName)
         # Checking if there is a toilet roll which is empty
-        if False in data.values():
-            # there is a toilet role which is empty
-            full = False
-            send_email()
+        for room, status in data.items():
+            if not status:
+                # datetime object containing current date and time
+                now = datetime.now()
+                # convert into str
+                dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+                send_email(room)
         # Recheck for data after 10 minutes
         sleep(CHECK_INTERVAL * 60)
 
 
-def data_scanner(info: Dict[str, bool]) -> bool:  # return type to be assigned
-    """ Scans through the <info> and detects if a False value exists triggers
-    the email function"""
-    # scans through the value pairs
-    for condition in info.values():
-        # if it detects a <False> returns <false>
-        if not condition:
-            return False
-    # else True i.e. no tp is empty
-    return True
+def send_email(location: str) -> None:
+    """ Sends an email to the manager informing him about the location of the 
+    toilet where toilet roll has exhausted """
+    
+    email = EmailMessage()
+    email['Subject'] = "Defiency in Toilet Paper at " + location
 
-def send_email():
-    # TODO: Create this function to send email as <data_scanner> triggers it to
-    pass
+    # Using Address Class to set misaddresses
+    email['From'] = Address("TP Tracker", "tpdeficiencyalert",
+                            "gmail.com")  # tpdeficiencyalert@gmail.com
+    email['To'] = Address("", "mahithedula",
+                          "gmail.com")  # change to cleanit@andrew.cmu.edu
+
+    # Creating the Body of the Email
+    message = " Greetings, There is a deficiency in toilet paper at " + \
+              location + ". Hopefully you can fix it. Thanks, TP Tracker"
+    email.set_content(message)
+
+    # Sending email message
+    secure = ssl.create_default_context()
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 465, secure) as server:
+            server.login("tpdeficiencyalert@gmail.com",
+                         "NewbieHacks")  # username and password
+            server.send_message(email)
+        print("Successfully sent")
+    except Exception as error:
+        print("Unsuccessful email")
+        print(error)
 
 
 if __name__ == '__main__':
     input('Press enter to start the searching')
+    # creates the data file 
+    create_data_file()
     data_updater()
-    # TODO: type 'exit' to stop the program
+    # # TODO: type 'exit' to stop the program
