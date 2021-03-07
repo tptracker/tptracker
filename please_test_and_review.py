@@ -12,9 +12,9 @@ from typing import Dict
 # https://www.learnrobotics.org/blog/arduino-data-logger-csv/'s version
 import serial
 
-arduino_port = "COM5"  # serial port of Arduino
+arduino_port = "COM3"  # serial port of Arduino
 baud = 9600  # arduino uno runs at 9600 baud
-# FILE_NAME = "Output_CSV_from_Arduino.csv"  # name of the CSV file generated
+FILE_NAME = "Output_CSV_from_Arduino.csv"  # name of the CSV file generated
 
 # the interval after which we have to check the changes in the .csv file
 CHECK_INTERVAL = .1
@@ -138,11 +138,10 @@ if __name__ == '__main__':
     call = True
     while call:
         print('Beginning setup')
-        FILE_NAME = input("Please enter the room name") + '.csv'
         input('Press enter to start the searching')
         # creates the data file
         create_data_file()
-        x = data_extractor_and_updater(FILE_NAME)
+        data_extractor_and_updater(FILE_NAME)
         ask = input("Do you want to restart? (y/n)")
         if ask == 'n':
             call = False
