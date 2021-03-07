@@ -89,7 +89,7 @@ def data_updater() -> None:
     full = True
     # while every toilet paper is full
     while full:
-        file = open('test_data.csv', 'r')
+        file = open(fileName, 'r')
         data = data_extractor(fileName)
         # Checking if there is a toilet roll which is empty
         for room, status in data.items():
