@@ -1,5 +1,6 @@
 # Which files are important?
-tracker
+tptracker_pro_max.py is the main file
+Output_CSV.ino is the Arduino file to be loaded onto your circuit
 
 # Inspiration
 Ever take a dump and go “Oh SHIT!! I’m out of toilet paper!”? Well, never again (on the CMU campus). As we approach the one year anniversary of the Great Toilet Paper Shortage of 2020, it's easy to remember one thing: Nobody wants to be caught with their pants down-- especially when they're out of toilet paper. Our project plans to upgrade the school system’s hygiene, happiness, and efficiency by notifying custodial staff when and where any toilets are out of toilet paper.
