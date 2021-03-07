@@ -66,6 +66,7 @@ def data_extractor_and_updater(filename) -> None:
                 # convert into str
                 dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
                 send_email(lined_list[0], dt_string)
+                return 'Done'
             # read the next line
             line = opened.readline()
             # Recheck for data after 10 minute
@@ -134,9 +135,16 @@ def send_email(location: str, date: str) -> None:
 
 
 if __name__ == '__main__':
-    print('Beginning setup')
-    FILE_NAME = input("Please enter the room name")
-    input('Press enter to start the searching')
-    # creates the data file
-    create_data_file()
-    data_extractor_and_updater(FILE_NAME)
+    call = True
+    while call:
+        print('Beginning setup')
+        FILE_NAME = input("Please enter the room name") + '.csv'
+        input('Press enter to start the searching')
+        # creates the data file
+        create_data_file()
+        x = data_extractor_and_updater(FILE_NAME)
+        ask = input("Do you want to restart? (y/n)")
+        if ask == 'n':
+            call = False
+        
+    
