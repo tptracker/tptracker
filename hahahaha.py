@@ -104,11 +104,13 @@ def send_email(location: str, date: str) -> None:
     email = EmailMessage()
     email['Subject'] = "Toilet Paper Replacement at " + location
 
-    # Using Address Class to set emailaddresses
-    email['From'] = Address("TP Tracker", "tpdeficiencyalert",
-                            "gmail.com")  # tpdeficiencyalert@gmail.com
-    email['To'] = Address("", "nandwanikhushaal",
-                          "gmail.com")  # change to cleanit@andrew.cmu.edu
+    name = input('Enter the First and Last name of the reciever')
+    username = input('Enter the receiver username (first part of the address before the @)')
+    domain = input('Enter the domain of the receiver (ex: gmail.com)')
+    
+    #Using Address Class to set emailaddresses
+    email['From'] = Address("TP Tracker", "tpdeficiencyalert", "gmail.com" ) #tpdeficiencyalert@gmail.com
+    email['To'] = Address(name, username, domain)
 
     # Creating the Body of the Email
     message = f""" 
